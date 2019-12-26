@@ -36,19 +36,13 @@ function start() {
                     duration: duration
                 }
                 console.log(body)
-                const request = new Request('https://mulink.ee.ncku.edu.tw/addYTListenHistory');
-                fetch(request, {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(body)
-                    })
-                    .then(response => response.text())
-                    .then(blob => {
-                        console.log(blob)
-                    });
+                
+                chrome.runtime.sendMessage({type: "addYTListenHistory", body}, r => r.addYTListenHistory
+                ? console.log(r.addYTListenHistory)
+                : console.log("error"));
+                chrome.runtime.sendMessage({type: "tags", videoID:videoID}, r => r.tags
+                ? console.log(r.tags)
+                : console.log(r.error));
             });
         } else {
             // console.log("not work")
