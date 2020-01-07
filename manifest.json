@@ -30,5 +30,5 @@
         "js" : ["test.js"]  
   } 
 ],
-  "manifest_version": 2.1
+  "manifest_version": 2
 }

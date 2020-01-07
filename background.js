@@ -1,6 +1,9 @@
 
 
 const endpoint = "https://www.googleapis.com/youtube/v3/videos";
+// V2.1
+// add send info when half duration time
+// add check tag is exist or not
 
 // The API key below is not a secret. Generated with these settings:
 // 
@@ -20,12 +23,13 @@ chrome.identity.getProfileUserInfo(function (userinfo) {
     console.log('email is ' + email);
   })
 });
+
 chrome.runtime.onInstalled.addListener(function () {
-  chrome.storage.sync.set({
-    color: '#3aa757'
-  }, function () {
-    console.log('The color is green.');
-  });
+  // chrome.storage.sync.set({
+  //   color: '#3aa757'
+  // }, function () {
+  //   console.log('The color is green.');
+  // });
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
     chrome.declarativeContent.onPageChanged.addRules([{
       conditions: [new chrome.declarativeContent.PageStateMatcher({
@@ -45,9 +49,25 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
     .then(msg =>sendResponse({addYTListenHistory:msg}))
   }
   if (request.type ==  "tags") {
-    fetchTags(request.videoID)
-        .then(t => sendResponse({tags: t}))
-        .catch(e => sendResponse({error: "Error fetching tags: " + e}));
+    fetchCheckVideoInfo(request.body.id)
+    // .then(r => sendResponse({tags: JSON.stringify(r=='false')})) 
+    .then(r => r == 'false' ? 
+      fetchTags(request.body.id)
+      // .then(t=>sendResponse({tags: JSON.stringify(t)})
+      .then(t=>{
+          body = request.body
+          body.tags=t
+          delete body.UUID
+          delete body.email
+          // sendResponse({tags: JSON.stringify(body)})
+          fetchaddVideoInfo(body)
+            .then(t => sendResponse({tags: JSON.stringify(t)}))
+            .catch(e => sendResponse({error: "Error fetchaddVideoInfo tags: " + e}))
+        })
+      .catch(e => sendResponse({error: "Error fetchCheckVideoInfo tags: " + e})):
+          sendResponse({tags: r})
+      )
+    
   }
 
   return true; // tells the runtime not to close the message channel
@@ -64,6 +84,35 @@ const fetchListenHistory = body => {
       },
       body: JSON.stringify(body)
     })
+    .then(response => response.text())
+};
+
+const fetchCheckVideoInfo = videoID => {
+  const url = 'https://mulink.ee.ncku.edu.tw/checkVideoInfo';
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({"videoID":videoID})
+    })
+    .then(response => response.text())
+};
+
+const fetchaddVideoInfo = body => {
+  const url = 'https://mulink.ee.ncku.edu.tw/addVideoInfo';
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    // .then(r => r.json())
     .then(response => response.text())
 };
 

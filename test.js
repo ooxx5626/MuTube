@@ -1,14 +1,16 @@
 var preurl = ''
 var url = ''
 var storage = chrome.storage
-
+var initTime = (new Date).getTime();
+var isSend = false
+var body = {}
+var videoID = ''
 function start() {
     try {
-
         url = window.location.toString()
         var redLine = document.querySelector("body > ytd-app > yt-page-navigation-progress")
         // var isdisplay = window.getComputedStyle(redLine, null).display == "block" //看的到
-        var isdisplay = redLine.getAttribute("aria-valuenow") != 100
+        var isdisplay = redLine.getAttribute("aria-valuenow") != 100 //讀取條看的到
         // console.log(redLine)
         // console.log("getAttribute : "+redLine.getAttribute("aria-valuenow"))
         // console.log("isdisplay : "+isdisplay)
@@ -19,11 +21,12 @@ function start() {
             // console.log("看不到")
             if (url != preurl) {
                 preurl = url
+                initTime = (new Date).getTime()
+                isSend = false
                 console.log("work")
                 storage.sync.get('email', function (data) {
                     var re = /watch\?v=[\-A-Za-z0-9_]*/
-                    var videoID = re.exec(url)[0].replace('watch?v=', '')
-                    console.log(document.querySelector("#scriptTag").innerText)
+                    videoID = re.exec(url)[0].replace('watch?v=', '')
                     var scriptTag = JSON.parse(document.querySelector("#scriptTag").innerText)
                     var videoTitle = scriptTag["name"]
                     var duration = scriptTag['duration']
@@ -35,7 +38,7 @@ function start() {
                         console.log(videoID);
                         console.log(videoTitle)
                     })
-                    var body = {
+                    body = {
                         UUID: data.email,
                         email: data.email,
                         id: videoID,
@@ -43,23 +46,25 @@ function start() {
                         thumbnails: thumbnails,
                         duration: duration
                     }
-                    console.log(body)
-                    if (typeof chrome.app.isInstalled !== undefined) {
-                        chrome.runtime.sendMessage({
-                                type: "addYTListenHistory",
-                                body
-                            }, r => r.addYTListenHistory ?
-                            console.log(r.addYTListenHistory) :
-                            console.log("error"));
-                        chrome.runtime.sendMessage({
-                                type: "tags",
-                                videoID: videoID
-                            }, r => r.tags ?
-                            console.log(r.tags) :
-                            console.log(r.error));
-                    }
                 });
-            } else {
+            // } else if((new Date).getTime()-initTime >= body["duration"]/2000 && !isSend) {
+            } else if((new Date).getTime()-initTime >= 10000/2000 && !isSend) { //debug 5s
+                console.log(body)
+                if (typeof chrome.app.isInstalled !== undefined) {
+                    isSend = true
+                    chrome.runtime.sendMessage({
+                            type: "addYTListenHistory",
+                            body
+                        }, r => r.addYTListenHistory ?
+                        console.log("addYTListenHistory : "+r.addYTListenHistory) :
+                        console.log("error"));
+                    chrome.runtime.sendMessage({
+                            type: "tags",
+                            body
+                        }, r => r.tags ?
+                        console.log("tags : "+r.tags) :
+                        console.log(r.error));
+                }
                 
             }
         }
