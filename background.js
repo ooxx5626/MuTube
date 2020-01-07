@@ -49,23 +49,21 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
     .then(msg =>sendResponse({addYTListenHistory:msg}))
   }
   if (request.type ==  "tags") {
+    body = request.body
     fetchCheckVideoInfo(request.body.id)
-    // .then(r => sendResponse({tags: JSON.stringify(r=='false')})) 
     .then(r => r == 'false' ? 
       fetchTags(request.body.id)
-      // .then(t=>sendResponse({tags: JSON.stringify(t)})
       .then(t=>{
-          body = request.body
+          // sendResponse({tags: JSON.stringify(body)})
           body.tags=t
           delete body.UUID
           delete body.email
-          // sendResponse({tags: JSON.stringify(body)})
           fetchaddVideoInfo(body)
             .then(t => sendResponse({tags: JSON.stringify(t)}))
             .catch(e => sendResponse({error: "Error fetchaddVideoInfo tags: " + e}))
         })
       .catch(e => sendResponse({error: "Error fetchCheckVideoInfo tags: " + e})):
-          sendResponse({tags: r})
+          sendResponse({tags: "is exist "+r})
       )
     
   }

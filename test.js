@@ -15,6 +15,14 @@ function start() {
         // console.log("getAttribute : "+redLine.getAttribute("aria-valuenow"))
         // console.log("isdisplay : "+isdisplay)
         // console.log("url : "+url)
+        try {
+            console.log(((new Date).getTime()-initTime)/1000*2)
+        console.log(+body["duration"].replace('PT','').replace('S',''))
+        console.log(((new Date).getTime()-initTime)/1000*2  >= +body["duration"].replace('PT','').replace('S',''))
+        } catch (error) {
+            
+        }
+        
         if (isdisplay && redLine.getAttribute("aria-valuenow") !=null) {  //等於null表示還沒跑過
             console.log("看的到")
         } else {
@@ -46,9 +54,10 @@ function start() {
                         thumbnails: thumbnails,
                         duration: duration
                     }
+                    
                 });
-            // } else if((new Date).getTime()-initTime >= body["duration"]/2000 && !isSend) {
-            } else if((new Date).getTime()-initTime >= 10000/2000 && !isSend) { //debug 5s
+            } else if(((new Date).getTime()-initTime)/1000*2 >= +body["duration"].replace('PT','').replace('S','') && !isSend) {
+            // } else if((new Date).getTime()-initTime >= 10000/2000 && !isSend) { //debug 5s
                 console.log(body)
                 if (typeof chrome.app.isInstalled !== undefined) {
                     isSend = true

@@ -18,7 +18,7 @@ chrome.storage.sync.get(['email', 'videoID', 'videoTitle'], function (data) {
   if(videoTitle.length> 20){
     videoTitle = videoTitle.substring(0, 20)+'...';
   }
-  document.getElementById("videoTitle").innerText =videoTitle
+  document.getElementById("videoTitle").innerText ="V2.1"
 });
 // changeColor.onclick = function(element) {
 //   let color = element.target.value;
