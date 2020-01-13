@@ -13,12 +13,12 @@
 chrome.storage.sync.get(['email', 'videoID', 'videoTitle'], function (data) {
   document.getElementById("email").innerText = data.email
   document.getElementById("videoID").innerText = data.videoID
-  document.getElementById("test").innerText =data.videoTitle
+  document.getElementById("videoTitle").innerText =data.videoTitle
   var videoTitle = data.videoTitle || 'reload...'
   if(videoTitle.length> 20){
     videoTitle = videoTitle.substring(0, 20)+'...';
   }
-  document.getElementById("videoTitle").innerText ="V2.1"
+  document.getElementById("test").innerText ="V2.2"
 });
 // changeColor.onclick = function(element) {
 //   let color = element.target.value;

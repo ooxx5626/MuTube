@@ -4,6 +4,9 @@ const endpoint = "https://www.googleapis.com/youtube/v3/videos";
 // V2.1
 // add send info when half duration time
 // add check tag is exist or not
+// V2.2
+// add shine Text when half duration time
+
 
 // The API key below is not a secret. Generated with these settings:
 // 

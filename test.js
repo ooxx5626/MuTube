@@ -4,7 +4,7 @@ var storage = chrome.storage
 var initTime = (new Date).getTime();
 var isSend = false
 var body = {}
-var videoID = ''
+var videoID = '', documentTitle = ''
 function start() {
     try {
         url = window.location.toString()
@@ -16,9 +16,9 @@ function start() {
         // console.log("isdisplay : "+isdisplay)
         // console.log("url : "+url)
         try {
-            console.log(((new Date).getTime()-initTime)/1000*2)
-        console.log(+body["duration"].replace('PT','').replace('S',''))
-        console.log(((new Date).getTime()-initTime)/1000*2  >= +body["duration"].replace('PT','').replace('S',''))
+        // console.log(((new Date).getTime()-initTime)/1000*2)
+        // console.log(+body["duration"].replace('PT','').replace('S',''))
+        // console.log(((new Date).getTime()-initTime)/1000*2  >= +body["duration"].replace('PT','').replace('S',''))
         } catch (error) {
             
         }
@@ -31,6 +31,7 @@ function start() {
                 preurl = url
                 initTime = (new Date).getTime()
                 isSend = false
+                documentTitle = document.title
                 console.log("work")
                 storage.sync.get('email', function (data) {
                     var re = /watch\?v=[\-A-Za-z0-9_]*/
@@ -67,6 +68,8 @@ function start() {
                         }, r => r.addYTListenHistory ?
                         console.log("addYTListenHistory : "+r.addYTListenHistory) :
                         console.log("error"));
+                        // document.title = 'Add Listen History success'
+                        addMessage()
                     chrome.runtime.sendMessage({
                             type: "tags",
                             body
@@ -80,5 +83,23 @@ function start() {
     } catch (error) {
         console.log("error : "+error) 
     }
+}
+function addMessage(){
+    var startTime = (new Date).getTime()
+    console.log("startTime :"+startTime)
+    var shine = true
+    var addMessageTask = setInterval(()=>{
+        if((new Date).getTime() - startTime > 12000){
+            // alert(documentTitle)
+            document.title = documentTitle
+            clearInterval(addMessageTask);
+            return;
+        }
+        // console.log("documentTitle :"+documentTitle)
+        // console.log("(new Date).getTime() :"+(new Date).getTime())
+        // console.log("shine :"+shine)
+        shine? document.title = 'Add Listen History success':document.title = documentTitle
+        shine = !shine
+    }, 1000);
 }
 setInterval(start, 3000);
