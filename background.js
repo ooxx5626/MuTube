@@ -1,5 +1,3 @@
-
-
 const endpoint = "https://www.googleapis.com/youtube/v3/videos";
 // V2.1
 // add send info when half duration time
@@ -14,7 +12,7 @@ const endpoint = "https://www.googleapis.com/youtube/v3/videos";
 // * What data will you be accessing?         [ Public data              ]
 
 // const key = "AIzaSyCaHWZYPuLv4cD6k-TQjg4Jx_1GQnG1wFw"; 
-const key = "AIzaSyBpjlYzWiO339NWgZ71dGFv_pPMHMmvPSc"; 
+const key = "AIzaSyBpjlYzWiO339NWgZ71dGFv_pPMHMmvPSc";
 
 
 chrome.identity.getProfileUserInfo(function (userinfo) {
@@ -49,31 +47,40 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
 
   if (request.type == "addYTListenHistory") {
     fetchListenHistory(request.body)
-    .then(msg =>sendResponse({addYTListenHistory:msg}))
+      .then(msg => sendResponse({
+        addYTListenHistory: msg
+      }))
   }
-  if (request.type ==  "tags") {
+  if (request.type == "tags") {
     body = request.body
     fetchCheckVideoInfo(request.body.id)
-    .then(r => r == 'false' ? 
-      fetchTags(request.body.id)
-      .then(t=>{
-          // sendResponse({tags: JSON.stringify(body)})
-          body.tags=t
+      .then(r => r == 'false' ?
+        fetchTags(request.body.id)
+        .then(t => {
+          // sendResponse({tags: JSON.stringify(t)})
+          body.tags = t
           delete body.UUID
           delete body.email
           fetchaddVideoInfo(body)
-            .then(t => sendResponse({tags: JSON.stringify(t)}))
-            .catch(e => sendResponse({error: "Error fetchaddVideoInfo tags: " + e}))
+            .then(t => sendResponse({
+              tags: JSON.stringify(t)
+            }))
+            .catch(e => sendResponse({
+              error: "Error fetchaddVideoInfo tags: " + e
+            }))
         })
-      .catch(e => sendResponse({error: "Error fetchCheckVideoInfo tags: " + e})):
-          sendResponse({tags: "is exist "+r})
+        .catch(e => sendResponse({
+          error: "Error fetchCheckVideoInfo tags: " + e
+        })) :
+        sendResponse({
+          tags: "is exist " + r
+        })
       )
-    
+
   }
 
   return true; // tells the runtime not to close the message channel
 });
-
 
 const fetchListenHistory = body => {
   const url = 'https://mulink.ee.ncku.edu.tw/addYTListenHistory';
@@ -92,12 +99,14 @@ const fetchCheckVideoInfo = videoID => {
   const url = 'https://mulink.ee.ncku.edu.tw/checkVideoInfo';
 
   return fetch(url, {
-    method: 'POST',
-    headers: {
+      method: 'POST',
+      headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({"videoID":videoID})
+      body: JSON.stringify({
+        "videoID": videoID
+      })
     })
     .then(response => response.text())
 };
@@ -106,8 +115,8 @@ const fetchaddVideoInfo = body => {
   const url = 'https://mulink.ee.ncku.edu.tw/addVideoInfo';
 
   return fetch(url, {
-    method: 'POST',
-    headers: {
+      method: 'POST',
+      headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
@@ -128,5 +137,5 @@ const fetchTags = videoID => {
   return fetch(url)
     .then(r => r.json())
     .then(r => (r.items[0] && r.items[0].snippet.tags) || []);
-    
+
 };
