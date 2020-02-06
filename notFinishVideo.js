@@ -79,7 +79,7 @@ function saveData() {
 function sendDate() {
     var listenTime = ((new Date).getTime() - initTime2) / 1000
     // if (listenTime <= +body["duration"].replace('PT', '').replace('S', '')/4) {
-    if (listenTime <= 30) {
+    if (listenTime <= +body["duration"].replace('PT', '').replace('S', '')-10) {
         if (typeof chrome.app.isInstalled !== undefined) {
             // console.log("not finish ")
             body["listenTime"] = listenTime
