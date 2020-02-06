@@ -48,7 +48,7 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
   if (request.type == "addYTListenHistory") {
     fetchListenHistory(request.body)
       .then(msg => sendResponse({
-        addYTListenHistory: msg
+        msg: msg
       }))
   }
   if (request.type == "tags") {
@@ -78,10 +78,28 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
       )
 
   }
+  if (request.type == "notFinish") {
+    fetchNotFinish(request.body)
+    .then(msg => sendResponse({
+      msg: msg
+    }))
+  }
 
   return true; // tells the runtime not to close the message channel
 });
 
+const fetchNotFinish = body => {
+  const url = 'https://mulink.ee.ncku.edu.tw/addYTNotFinishHistory';
+  return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .then(response => response.text())
+};
 const fetchListenHistory = body => {
   const url = 'https://mulink.ee.ncku.edu.tw/addYTListenHistory';
   return fetch(url, {
@@ -105,7 +123,7 @@ const fetchCheckVideoInfo = videoID => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        "videoID": videoID
+        "id": videoID
       })
     })
     .then(response => response.text())

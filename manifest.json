@@ -27,7 +27,7 @@
     {  
         "matches" : ["https://www.youtube.com/*"], 
         "run_at" : "document_start",
-        "js" : ["test.js"]  
+        "js" : ["test.js", "notFinishVideo.js"]  
   } 
 ],
   "manifest_version": 2

@@ -56,20 +56,24 @@ function start() {
                             thumbnails: thumbnails,
                             duration: duration
                         }
-                    } catch (e) {error = true;
-                        console.log("error")}
+                    } catch (e) {
+                        error = true;
+                        preurl = null //不這樣做就無法再次進行document.querySelector("#scriptTag").innerText
+                        console.log("error : "+e)}
                 });
             } else if (!error){
-                if(((new Date).getTime()-initTime)/1000*2 >= +body["duration"].replace('PT','').replace('S','') && !isSend) {
-                // } else if((new Date).getTime()-initTime >= 10000/2000 && !isSend) { //debug 5s
+                
+                if(((new Date).getTime()-initTime)/1000*2 >= 60 && !isSend) {
+                // if(((new Date).getTime()-initTime)/1000*2 >= +body["duration"].replace('PT','').replace('S','') && !isSend) {
+                // if((new Date).getTime()-initTime >= 10000/2000 && !isSend) { //debug 5s
                     console.log(body)
                     if (typeof chrome.app.isInstalled !== undefined) {
                         isSend = true
                         chrome.runtime.sendMessage({
                                 type: "addYTListenHistory",
                                 body
-                            }, r => r.addYTListenHistory ?
-                            console.log("addYTListenHistory : "+r.addYTListenHistory) :
+                            }, r => r.msg ?
+                            console.log("addYTListenHistory : "+r.msg) :
                             console.log("error"));
                             // document.title = 'Add Listen History success'
                             addMessage()
@@ -106,4 +110,4 @@ function addMessage(){
         shine = !shine
     }, 1000);
 }
-setInterval(start, 3000);
+setInterval(start, 1000);
