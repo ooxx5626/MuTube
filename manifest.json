@@ -1,6 +1,6 @@
 {
   "name": "Musicfy",
-  "version": "1.0",
+  "version": "2.4",
   "description": "Mulink Dataset!",
   "permissions": ["https://www.youtube.com/*","tabs","activeTab", "declarativeContent", "storage", "identity","identity.email"],
   "options_page": "options.html",
@@ -27,7 +27,7 @@
     {  
         "matches" : ["https://www.youtube.com/*"], 
         "run_at" : "document_start",
-        "js" : ["test.js", "notFinishVideo.js"]  
+        "js" : ["main.js", "notFinishVideo.js"]  
   } 
 ],
   "manifest_version": 2
