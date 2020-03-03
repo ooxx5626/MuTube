@@ -53,9 +53,9 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
   }
   if (request.type == "tags") {
     body = request.body
-    fetchCheckVideoInfo(request.body.id)
+    fetchCheckVideoInfo(body)
       .then(r => r == 'false' ?
-        fetchTags(request.body.id)
+        fetchTags(request.body.videoID)
         .then(t => {
           // sendResponse({tags: JSON.stringify(t)})
           body.tags = t
@@ -113,7 +113,7 @@ const fetchListenHistory = body => {
     .then(response => response.text())
 };
 
-const fetchCheckVideoInfo = videoID => {
+const fetchCheckVideoInfo = body => {
   const url = 'https://mulink.ee.ncku.edu.tw/checkVideoInfo';
 
   return fetch(url, {
@@ -122,9 +122,7 @@ const fetchCheckVideoInfo = videoID => {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        "id": videoID
-      })
+      body: JSON.stringify(body)
     })
     .then(response => response.text())
 };

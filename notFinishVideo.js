@@ -41,19 +41,25 @@ function saveData() {
     initTime2 = (new Date).getTime()
     storage.sync.get('email', function (data) {
         var re = /watch\?v=[\-A-Za-z0-9_]*/
+        var reChannel = /channel\/[\-A-Za-z0-9_]*/
         try {
             videoID = re.exec(url)[0].replace('watch?v=', '')
             var scriptTag = JSON.parse(document.querySelector("#scriptTag").innerText)
+            var channelName = document.querySelector("#text > a").innerText
+            var channelID = document.querySelector("#text > a").href
+            channelID = reChannel.exec(channelID)[0].replace('channel/', '')
             var videoTitle = scriptTag["name"]
             var duration = scriptTag['duration']
             var thumbnails = scriptTag['thumbnailUrl'][0]
             body = {
                 UUID: data.email,
                 email: data.email,
-                id: videoID,
+                videoID: videoID,
                 title: videoTitle,
                 thumbnails: thumbnails,
-                duration: duration
+                duration: duration,
+                channelName: channelName,
+                channelID: channelID
             }
             isSaved = true
             // console.log("saveData")
