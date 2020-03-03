@@ -18,13 +18,6 @@ function start() {
         if (isdisplay && redLine.getAttribute("aria-valuenow") != null) { //等於null表示還沒跑過
             // console.log("看的到3")
         } else {
-            // console.log("url2 :" + url)
-            // console.log("preurl2 :" + preurl2)
-            // console.log("url2 != preurl2 :" + url2 != preurl2)
-
-            // console.log(body["duration"])
-            // console.log(((new Date).getTime() - initTime2) / 1000)
-            // console.log(+body["duration"].replace('PT', '').replace('S', '')/4)
             if (preurl2 == '') {
                 // console.log("url==")
                 saveData()
@@ -34,12 +27,8 @@ function start() {
             } else { // 一樣
 
                 if (!isSaved) {
-                    // console.log("!isSaved")
                     saveData()
-                } else {
-                    // console.log("isSaved")
-                    // saveData()
-                }
+                } 
             }
         }
     } catch (error) {

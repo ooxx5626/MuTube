@@ -11,15 +11,20 @@
   </head>
   <body>
     <!-- <button id="changeColor"></button> -->
-    <span style= "display:block">Your mail :</span>
-    <span id="email"></span>
-    <span style= "display:block">videoID :</span >
-    <span id="videoID"></span>
-
-    <span style= "display:block">videoTitle :</span>
-    <span id="videoTitle"></span>
-    <span style= "display:block">test :</span>
-    <span id="test"></span>
-    <script src="popup.js"></script>
+    
+    <div id="context">
+      <span style= "display:block">Your mail :</span>
+      <span id="email" style="margin-bottom: 10px;"></span>
+      <span style= "display:block">videoID :</span >
+      <span id="videoID" style="margin-bottom: 10px;"></span>
+      <span style= "display:block">videoTitle :</span>
+      <span id="videoTitle" style="margin-bottom: 10px;"></span>
+      <span style= "display:block">version :</span>
+      <span id="test" style="margin-bottom: 10px;"></span>
+    </div>
+    <div id="error" style= "display: none;width: 100px;">
+      <span style="font-size: 1.2em;" >Please login your google account in Chrome.</span>
+      </div>
+      <script src="popup.js"></script>
   </body>
 </html>

@@ -11,14 +11,21 @@
 //   changeColor.setAttribute('value', data.color);
 // });
 chrome.storage.sync.get(['email', 'videoID', 'videoTitle'], function (data) {
-  document.getElementById("email").innerText = data.email
-  document.getElementById("videoID").innerText = data.videoID
-  document.getElementById("videoTitle").innerText =data.videoTitle
-  var videoTitle = data.videoTitle || 'reload...'
-  if(videoTitle.length> 20){
-    videoTitle = videoTitle.substring(0, 20)+'...';
+  if(data.email==''){
+    document.getElementById("context").style.display = 'none'
+    document.getElementById("error").style.display = 'block'
+  }else{
+    document.getElementById("context").style.display = 'block'
+    document.getElementById("error").style.display = 'none'
+    document.getElementById("email").innerText = data.email
+    document.getElementById("videoID").innerText = data.videoID
+    document.getElementById("videoTitle").innerText =data.videoTitle
+    var videoTitle = data.videoTitle || 'reload...'
+    if(videoTitle.length> 20){
+      videoTitle = videoTitle.substring(0, 20)+'...';
+    }
   }
-  document.getElementById("test").innerText ="V2.3"
+  document.getElementById("test").innerText ="V2.4"
 });
 // changeColor.onclick = function(element) {
 //   let color = element.target.value;

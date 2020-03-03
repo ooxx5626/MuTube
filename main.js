@@ -2,7 +2,7 @@ var preurl = ''
 var url = ''
 var storage = chrome.storage
 var initTime = (new Date).getTime();
-var isSend = false, error = false
+var period = 1000, isSend = 0, error = false, debug = true, sendMode = 0, pauseCount = 0
 var body = {}
 var videoID = '', documentTitle = ''
 function start() {
@@ -25,23 +25,27 @@ function start() {
         if (isdisplay && redLine.getAttribute("aria-valuenow") !=null) {  //等於null表示還沒跑過
             console.log("看的到")
         } else {
-            // console.log("看不到")
+            countPauseCount()
             if (url != preurl) {
-                saveData()
+                resetData()
+                saveDataMain()
             } else if (!error){
-                sendDate()
+                sendDateMain()
             }
         }
     } catch (error) {
         console.log("error : "+error) 
     }
 }
-function saveData() {
-    
+function resetData(){
     preurl = url
     initTime = (new Date).getTime()
-    isSend = false
+    isSend = 0
+    pauseCount = 0
     documentTitle = document.title
+}
+function saveDataMain() {
+    
     console.log("work")
     storage.sync.get('email', function (data) {
         var re = /watch\?v=[\-A-Za-z0-9_]*/
@@ -73,13 +77,11 @@ function saveData() {
             console.log("error : "+e)}
     });
 }
-function sendDate() {
-    if(((new Date).getTime()-initTime)/1000*2 >= 60 && !isSend) {
-    // if(((new Date).getTime()-initTime)/1000*2 >= +body["duration"].replace('PT','').replace('S','') && !isSend) {
-    // if((new Date).getTime()-initTime >= 10000/2000 && !isSend) { //debug 5s
+function sendDateMain() {
+    if(sendJudge()) {
         console.log(body)
         if (typeof chrome.app.isInstalled !== undefined) {
-            isSend = true
+            isSend += 1
             chrome.runtime.sendMessage({
                     type: "addYTListenHistory",
                     body
@@ -87,7 +89,7 @@ function sendDate() {
                 console.log("addYTListenHistory : "+r.msg) :
                 console.log("error"));
                 // document.title = 'Add Listen History success'
-                addMessage()
+                addMessageShine()
             chrome.runtime.sendMessage({
                     type: "tags",
                     body
@@ -99,7 +101,39 @@ function sendDate() {
     }
 
 }
-function addMessage(){
+function sendJudge(){
+    var re
+    var duration = +body["duration"].replace('PT','').replace('S','')
+    var listenTime = ((new Date).getTime()-initTime)/1000
+    var pauseTime = pauseCount * period/1000
+    if(debug){
+        // x = document.querySelector("#autoplay").innerText
+        // if(x!='自動播放'){
+        //     listenTime = +x
+        // }
+        // document.querySelector("#upnext").innerText = listenTime+" "+isSend
+        // console.log("listenTime : "+listenTime)
+        // console.log("listenTime - duration*isSend - pauseTime : "+ (listenTime - duration*isSend - pauseTime))
+        // document.querySelector("#upnext").innerText = listenTime + " " + duration +  " "+isSend+" " + pauseTime
+    }
+    if(sendMode == 0){// can repeat and 1 min
+        re = listenTime - duration*isSend - pauseTime >= 60
+
+    }else if(sendMode == 1){// half
+        re = listenTime*2 >= duration && !isSend
+
+    }else if(sendMode == 2){//debug 5s
+        re = listenTime >= 10000/2000 && !isSend
+    }
+    return re
+}
+function countPauseCount(){
+    l = document.querySelector("#movie_player").classList
+    if(l.contains("paused-mode")){
+        pauseCount += 1
+    }
+}
+function addMessageShine(){
     var startTime = (new Date).getTime()
     console.log("startTime :"+startTime)
     var shine = true
@@ -117,4 +151,4 @@ function addMessage(){
         shine = !shine
     }, 1000);
 }
-setInterval(start, 1000);
+setInterval(start, period);
