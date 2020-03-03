@@ -2,7 +2,11 @@ var preurl = ''
 var url = ''
 var storage = chrome.storage
 var initTime = (new Date).getTime();
-var period = 1000, isSend = 0, error = false, debug = true, sendMode = 2, pauseCount = 0
+var period = 1000, isSend = 0, error = false, debug = true, pauseCount = 0
+var sendMode = 0
+// 0 : can repeat and 1 min
+// 1 : half duration
+// 2 : debug 5s
 var body = {}
 var videoID = '', documentTitle = ''
 function start() {
