@@ -1,30 +1,67 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style>
-      button {
-        height: 30px;
-        width: 30px;
-        outline: none;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- <button id="changeColor"></button> -->
-    
-    <div id="context">
-      <span style= "display:block">Your mail :</span>
-      <span id="email" style="margin-bottom: 10px;"></span>
-      <span style= "display:block">videoID :</span >
-      <span id="videoID" style="margin-bottom: 10px;"></span>
-      <span style= "display:block">videoTitle :</span>
-      <span id="videoTitle" style="margin-bottom: 10px;"></span>
-      <span style= "display:block">version :</span>
-      <span id="test" style="margin-bottom: 10px;"></span>
+
+<head>
+  <style>
+    body {
+      height: auto;
+      background-color: black;
+    }
+
+    #context {
+      /* background-size: contain; */
+      width: 400px;
+      /* margin: 4px; */
+    }
+
+    #info {
+      float: left;
+      width: 200px;
+      /* padding-bottom: 8px; */
+    }
+
+    #img {
+      width: 200px;
+      height: 200px;
+      max-width:  100%;
+      display:  flex;
+      align-items: center;
+      justify-content:  center;
+    }
+    .value{
+      margin-bottom: 5px;
+    }
+
+    span {
+      color: bisque;
+      /* margin: 1px; */
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <button id="changeColor"></button> -->
+
+  <div id="context">
+    <div id="info">
+      <span style="display:block">Your mail :</span>
+      <span id="email" class='value'></span>
+      <span style="display:block">videoID :</span>
+      <span id="videoID" class='value'></span>
+      <span style="display:block">videoTitle :</span>
+      <span id="videoTitle" class='value'></span>
+      <span style="display:block">version :</span>
+      <span id="test" class='value'></span>
     </div>
-    <div id="error" style= "display: none;width: 100px;">
-      <span style="font-size: 1.2em;" >Please login your google account in Chrome.</span>
+      <div id="img">
+        <img style="width: 200px;">
       </div>
-      <script src="popup.js"></script>
-  </body>
+</div>
+  <div id="error" style="display: none;width: 100px;">
+    <span style="font-size: 1.2em;">Please login your google account in Chrome.</span>
+  </div>
+  <script src="popup.js"></script>
+</body>
+
 </html>

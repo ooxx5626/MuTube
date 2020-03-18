@@ -29,12 +29,14 @@ function start() {
         if (isdisplay && redLine.getAttribute("aria-valuenow") !=null) {  //等於null表示還沒跑過
             console.log("看的到")
         } else {
-            countPauseCount()
-            if (url != preurl) {
-                resetData()
-                saveDataMain()
-            } else if (!error){
-                sendDateMain()
+            if(url != 'https://www.youtube.com/'){
+                countPauseCount()
+                if (url != preurl) {
+                    resetData()
+                    saveDataMain()
+                } else if (!error){
+                    sendDateMain()
+                }
             }
         }
     } catch (error) {
@@ -64,9 +66,14 @@ function saveDataMain() {
             var videoTitle = scriptTag["name"]
             var duration = scriptTag['duration']
             var thumbnails = scriptTag['thumbnailUrl'][0]
+            var viewCount = scriptTag['interactionCount']
+            var uploadDate = scriptTag['uploadDate']
+            var manifestData = chrome.runtime.getManifest();
+            var version = manifestData.version;
             storage.sync.set({
                 videoID: videoID,
-                videoTitle: videoTitle
+                videoTitle: videoTitle,
+                thumbnails:thumbnails
             }, () => {
                 console.log(videoID);
                 console.log(videoTitle)
@@ -79,16 +86,25 @@ function saveDataMain() {
                 thumbnails: thumbnails,
                 duration: duration,
                 channelName: channelName,
-                channelID: channelID
+                channelID: channelID,
+                viewCount: viewCount,
+                uploadDate: uploadDate,
+                version: version
             }
         } catch (e) {
+            
+            if(url=='https://www.youtube.com/'){
+            }else{
             error = true;
             preurl = null //不這樣做就無法再次進行document.querySelector("#scriptTag").innerText
-            console.log("error : "+e)}
+            console.log("error : "+e)
+        }
+    }
     });
 }
 function sendDateMain() {
     if(sendJudge()) {
+        body['likeStatus'] = like_status();
         console.log(body)
         if (typeof chrome.app.isInstalled !== undefined) {
             isSend += 1
@@ -137,17 +153,33 @@ function sendJudge(){
     }else if(sendMode == 2){//debug 5s
         re = listenTime >= 10000/2000 && !isSend
     }
+    if(duration==0){
+        re = false
+    }
+    return re
+}
+function like_status(){
+    var c = document.querySelector("#menu-container").querySelectorAll("ytd-toggle-button-renderer")
+    var like = c[0].classList.contains("style-default-active")
+    var dislike = c[1].classList.contains("style-default-active")
+    var re
+    if(like)
+        re = 1
+    if(dislike)
+        re = -1
+    if(!like && !dislike)
+        re = 0
     return re
 }
 function countPauseCount(){
     l = document.querySelector("#movie_player").classList
-    if(l.contains("paused-mode")){
+    if(!l.contains("playing-mode")){
         pauseCount += 1
     }
 }
 function addMessageShine(){
     var startTime = (new Date).getTime()
-    console.log("startTime :"+startTime)
+    // console.log("startTime :"+startTime)
     var shine = true
     var addMessageTask = setInterval(()=>{
         if((new Date).getTime() - startTime > 12000){
