@@ -60,14 +60,15 @@ function saveDataMain() {
             videoID = re.exec(url)[0].replace('watch?v=', '')
             error = false;
             var scriptTag = JSON.parse(document.querySelector("#scriptTag").innerText)
-            var channelName = document.querySelector("#text > a").innerText
-            var channelID = document.querySelector("#text > a").href
+            var channelName = document.querySelector("#top-row > ytd-video-owner-renderer").querySelector("#text > a").innerText
+            var channelID = document.querySelector("#top-row > ytd-video-owner-renderer").querySelector("#text > a").href
             channelID = reChannel.exec(channelID)[0].replace('channel/', '')
             var videoTitle = scriptTag["name"]
             var duration = scriptTag['duration']
             var thumbnails = scriptTag['thumbnailUrl'][0]
             var viewCount = scriptTag['interactionCount']
             var uploadDate = scriptTag['uploadDate']
+            var likeStatus = like_status();
             var manifestData = chrome.runtime.getManifest();
             var version = manifestData.version;
             storage.sync.set({
@@ -89,6 +90,7 @@ function saveDataMain() {
                 channelID: channelID,
                 viewCount: viewCount,
                 uploadDate: uploadDate,
+                likeStatus:likeStatus,
                 version: version
             }
         } catch (e) {
@@ -122,6 +124,14 @@ function sendDateMain() {
                 }, r => r.tags ?
                 console.log("tags : "+r.tags) :
                 console.log(r.error));
+                
+            chrome.runtime.sendMessage({
+                type: "aboutComment",
+                body
+            }, r => r.msg ?
+            console.log("aboutComment : "+r.msg) :
+            console.log(r.error));
+
         }else{
             console.log("typeof chrome.app.isInstalled === undefined")
         }

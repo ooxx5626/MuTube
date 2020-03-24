@@ -1,6 +1,6 @@
 {
   "name": "Musicfy",
-  "version": "2.6",
+  "version": "2.7",
   "description": "Mulink Dataset!",
   "permissions": ["https://www.youtube.com/*","tabs","activeTab", "declarativeContent", "storage", "identity","identity.email"],
   "options_page": "options.html",

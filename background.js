@@ -44,6 +44,8 @@ chrome.runtime.onInstalled.addListener(function () {
 });
 
 chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
+  var manifestData = chrome.runtime.getManifest();
+  var version = manifestData.version;
 
   if (request.type == "addYTListenHistory") {
     fetchListenHistory(request.body)
@@ -71,9 +73,9 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
         })
         .catch(e => sendResponse({
           error: "Error fetchCheckVideoInfo tags: " + e
-        })) :
-        sendResponse({
-          tags: "is exist " + r
+        })) 
+        :sendResponse({
+          tags: "is exist in server"
         })
       )
 
@@ -85,6 +87,32 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
     }))
   }
 
+  if (request.type == "aboutComment") {
+    checkVideoComment(request.body)
+    .then(msg => {
+      if(msg == 'false'){
+        fetchComment(request.body.videoID)
+        .then(t =>{
+          data = {
+            "videoID":request.body.videoID,
+            "commentCount": t,
+            "version" : version
+            }
+            addVideoComment(data)
+            .then(r =>{
+              sendResponse({
+                msg: r+", comment in YouTube"
+              })
+
+            })
+        })
+      }else{
+        sendResponse({
+          msg: msg+" comment in server"
+        })
+      }
+  })
+  }
   return true; // tells the runtime not to close the message channel
 });
 
@@ -141,6 +169,32 @@ const fetchaddVideoInfo = body => {
     // .then(r => r.json())
     .then(response => response.text())
 };
+const checkVideoComment = body => {
+  const url = 'https://mulink.ee.ncku.edu.tw/checkVideoComment';
+
+  return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .then(response => response.text())
+};
+const addVideoComment = body => {
+  const url = 'https://mulink.ee.ncku.edu.tw/addVideoComment';
+
+  return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .then(response => response.text())
+};
 
 /**
  * @param {String} videoID
@@ -153,5 +207,13 @@ const fetchTags = videoID => {
   return fetch(url)
     .then(r => r.json())
     .then(r => (r.items[0] && r.items[0].snippet.tags) || []);
+
+};
+
+const fetchComment = videoID => {
+    const url = `${endpoint}?part=statistics&id=${encodeURIComponent(videoID)}&key=${key}`;
+  return fetch(url)
+    .then(r => r.json())
+    .then(r => (r.items[0] && r.items[0].statistics.commentCount) || []);
 
 };

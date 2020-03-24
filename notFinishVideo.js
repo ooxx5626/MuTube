@@ -47,8 +47,8 @@ function saveData2() {
         try {
             videoID = re.exec(url2)[0].replace('watch?v=', '')
             var scriptTag = JSON.parse(document.querySelector("#scriptTag").innerText)
-            var channelName = document.querySelector("#text > a").innerText
-            var channelID = document.querySelector("#text > a").href
+            var channelName = document.querySelector("#top-row > ytd-video-owner-renderer").querySelector("#text > a").innerText
+            var channelID = document.querySelector("#top-row > ytd-video-owner-renderer").querySelector("#text > a").href
             channelID = reChannel.exec(channelID)[0].replace('channel/', '')
             var videoTitle = scriptTag["name"]
             var duration = scriptTag['duration']
@@ -137,4 +137,4 @@ function sendDate2() {
     isSaved = false
     preurl2 = url
 }
-setInterval(start, period2);
+// setInterval(start, period2);
