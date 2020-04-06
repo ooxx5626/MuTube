@@ -6,8 +6,9 @@ var isSaved = false
 var body = {}
 var videoID = ''
 var period2 = 1000, pauseCount2 = 0
+var myInterval2 = null
 
-function start() {
+function start2() {
     // try {
         try {
             url2 = window.location.toString()
@@ -137,4 +138,8 @@ function sendDate2() {
     isSaved = false
     preurl2 = url
 }
-// setInterval(start, period2);
+
+window.onfocus = function() {
+    if(!myInterval2)
+        myInterval2 = setInterval(start2, period2);
+}

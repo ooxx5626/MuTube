@@ -9,6 +9,7 @@ var sendMode = 0
 // 2 : debug 5s
 var body = {}
 var videoID = '', documentTitle = ''
+var myInterval = null
 function start() {
     try {
         try {
@@ -205,4 +206,7 @@ function addMessageShine(){
         shine = !shine
     }, 1000);
 }
-setInterval(start, period);
+window.onfocus = function() {
+    if(!myInterval)
+        myInterval = setInterval(start, period);
+}
