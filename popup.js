@@ -23,10 +23,11 @@ chrome.storage.sync.get(['email', 'videoID', 'videoTitle', 'thumbnails'], functi
     document.getElementById("videoTitle").innerText = data.videoTitle
     document.querySelector("#img > img").src = data.thumbnails
     // document.querySelector("#context > div.ex6-box").style.height = document.querySelector("#info").offsetHeight+"px"
-    var videoTitle = data.videoTitle || 'reload...'
-    if(videoTitle.length> 20){
-      videoTitle = videoTitle.substring(0, 20)+'...';
-    }
+    // var videoTitle = data.videoTitle || 'reload...'
+    // if(videoTitle.length> 20){
+    //   videoTitle = videoTitle.substring(0, 20)+'...';
+    // }
+    document.querySelector("#img").style.height = (document.querySelector("#context > div.outer").clientHeight+5)+"px"
   }
   var manifestData = chrome.runtime.getManifest();
   var version = manifestData.version;
