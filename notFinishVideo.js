@@ -4,13 +4,13 @@ var storage = chrome.storage
 var initTime2 = (new Date).getTime();
 var isSaved = false
 var body = {}
-var TAG2 = "notFinishVideo.js"
+var TAG2 = "notFinishVideo"
 var videoID = ''
 function NFstart() {
     if (url2 != preurl2 && preurl2 != null && isSaved) {
         sendDate2()
     } else { // 一樣
-        if(!isSaved && url != 'https://www.youtube.com/'){
+        if(!isSaved  && url.indexOf('https://www.youtube.com/watch?v=') == '0'){
             resetDataNF()
             saveData2()
             initTime2 = (new Date).getTime()
@@ -20,7 +20,7 @@ function NFstart() {
 
 function saveData2() {
     storage.sync.get('email', function (data) {
-        console.log("saveData")
+        // console.log("saveData")
         data = saveData(data, TAG2)
         if(!data['error']){
             body = data['body']
@@ -37,7 +37,7 @@ function saveData2() {
 })
 }
 function resetDataNF(){
-    console.log("resetDataNF")
+    // console.log("resetDataNF")
     preurl2 = url2
     initTime2 = (new Date).getTime()
     pauseCount2 = 0
@@ -56,6 +56,7 @@ function sendDate2() {
             // console.log("not finish ")
             body["listenTime"] = listenTime2 - pauseTime2
             console.log(body)
+            pushToStorageAndSend(body['email'],body, TAG2)
             chrome.runtime.sendMessage({
                     type: "notFinish",
                     body

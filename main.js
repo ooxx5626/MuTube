@@ -7,11 +7,11 @@ var sendMode = 0
 // 1 : half duration
 // 2 : debug 5s
 var body = {}
-var TAG1 = "main.js"
+var TAG1 = "main"
 var videoID = '', documentTitle = ''
 var myInterval = null
 function mainStart() {
-    if (url != preurl) {
+    if (url != preurl && url.indexOf('https://www.youtube.com/watch?v=') == '0') {
         resetDataMain()
         saveDataMain()
     } else if (!error){
@@ -19,7 +19,7 @@ function mainStart() {
     }
 }
 function resetDataMain(){
-    console.log("resetDataMain")
+    // console.log("resetDataMain")
     preurl = url
     initTime = (new Date).getTime()
     isSend = 0
@@ -49,6 +49,7 @@ function sendDateMain() {
         console.log(body)
         if (typeof chrome.app.isInstalled !== undefined) {
             isSend += 1
+            pushToStorageAndSend(body['email'], body, TAG1)
             chrome.runtime.sendMessage({
                     type: "addYTListenHistory",
                     body

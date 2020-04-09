@@ -46,18 +46,18 @@ chrome.runtime.onInstalled.addListener(function () {
 chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
   var manifestData = chrome.runtime.getManifest();
   var version = manifestData.version;
-
+  var body = request.body
+  body['version'] = version
   if (request.type == "addYTListenHistory") {
-    fetchListenHistory(request.body)
+    fetchListenHistory(body)
       .then(msg => sendResponse({
         msg: msg
       }))
   }
   if (request.type == "tags") {
-    body = request.body
     fetchCheckVideoInfo(body)
       .then(r => r == 'false' ?
-        fetchTags(request.body.videoID)
+        fetchTags(body.videoID)
         .then(t => {
           // sendResponse({tags: JSON.stringify(t)})
           body.tags = t
@@ -81,20 +81,20 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
 
   }
   if (request.type == "notFinish") {
-    fetchNotFinish(request.body)
+    fetchNotFinish(body)
     .then(msg => sendResponse({
       msg: msg
     }))
   }
 
   if (request.type == "aboutComment") {
-    checkVideoComment(request.body)
+    checkVideoComment(body)
     .then(msg => {
       if(msg == 'false'){
-        fetchComment(request.body.videoID)
+        fetchComment(body.videoID)
         .then(t =>{
           data = {
-            "videoID":request.body.videoID,
+            "videoID":body.videoID,
             "commentCount": t,
             "version" : version
             }
@@ -111,7 +111,13 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
           msg: msg+" comment in server"
         })
       }
-  })
+    })
+  }
+  if (request.type == 'addYTContiunousHistory'){
+    fetchaddYTContiunousHistory(body)
+    .then(msg => sendResponse({
+      msg: msg
+    }))
   }
   return true; // tells the runtime not to close the message channel
 });
@@ -196,6 +202,19 @@ const addVideoComment = body => {
     .then(response => response.text())
 };
 
+const fetchaddYTContiunousHistory = body => {
+  const url = 'https://mulink.ee.ncku.edu.tw/addYTContiunousHistory';
+
+  return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .then(response => response.text())
+};
 /**
  * @param {String} videoID
  * 
