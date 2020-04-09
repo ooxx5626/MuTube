@@ -62,7 +62,7 @@ function test() {
 // if(!myInterval)
 //     myInterval = setInterval(startInterval, period);
 function startInterval(){
-    test()
+    // test()
     try {
         url = window.location.toString()
         url2 = window.location.toString()
@@ -217,15 +217,15 @@ function pushToStorageAndSend(email, videoInfo, from){
     })
 }
 
-function t(){
-    v1 = document.querySelector("#test1").value
-    pushToStorageAndSend('Email', {'videoID' : v1, 'listenTime' : 61}, 'main')
-    // console.log('v1 : '+ v1)
-}
-function x(){
-    v2 = document.querySelector("#test2").value
-    pushToStorageAndSend('Email', {'videoID' : v2, 'listenTime' : 50}, 'NFinish')
-    // console.log('v2 : '+ v2)
-}
+// function t(){
+//     v1 = document.querySelector("#test1").value
+//     pushToStorageAndSend('Email', {'videoID' : v1, 'listenTime' : 61}, 'main')
+//     // console.log('v1 : '+ v1)
+// }
+// function x(){
+//     v2 = document.querySelector("#test2").value
+//     pushToStorageAndSend('Email', {'videoID' : v2, 'listenTime' : 50}, 'NFinish')
+//     // console.log('v2 : '+ v2)
+// }
 
-for(e of document.getElementsByClassName("_3oh- _58nk")) e.innerText = '我要讓汶駿多念一年'
+// for(e of document.getElementsByClassName("_3oh- _58nk")) e.innerText = '我要讓OO多念一年'
