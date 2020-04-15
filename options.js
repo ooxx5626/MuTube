@@ -4,10 +4,10 @@
 
 'use strict';
 
-chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-  var url = tabs[0].url;
-  console.log(url)
-});
+// chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+//   var url = tabs[0].url;
+//   console.log(url)
+// });
 let page = document.getElementById('buttonDiv');
 const kButtonColors = ['#3aa757', '#e8453c', '#f9bb2d', '#4688f1'];
 function constructOptions(kButtonColors) {

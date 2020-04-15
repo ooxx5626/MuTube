@@ -46,6 +46,7 @@ function saveDataMain() {
 function sendDateMain() {
     if(sendJudge()) {
         body['likeStatus'] = like_status();
+        body['listenTiming'] = initTime
         console.log(body)
         if (typeof chrome.app.isInstalled !== undefined) {
             isSend += 1

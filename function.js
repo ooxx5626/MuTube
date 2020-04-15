@@ -5,12 +5,11 @@ var myInterval = null
 var period = 1000
 var preurl = null, preurl2 = null
 var url = '', url2 = ''
-var pauseCount = 0
+var pauseCount = 0, pauseCount2 = 0
 var storage = chrome.storage
 var s = false
 
 focusCheck = setInterval(function() { 
-    console.log(document.hasFocus())
     if(document.hasFocus()){
         if(!myInterval)
             myInterval = setInterval(startInterval, period);
@@ -18,49 +17,6 @@ focusCheck = setInterval(function() {
     }
 },1000);
 
-// window.onfocus = function() {
-function test() {
-    // if(!mainInterval)
-    //     mainInterval = setInterval(mainStart, period);
-    // this.console.log("main "+like_status())
-    // if(!NFInterval)
-    //     NFInterval = setInterval(NFstart, period);
-    // this.console.log("not "+like_status())
-    if(!s){
-        s = true
-        
-    storage.sync.set({'continuous_videoInfo':[], 'continuous_videoType':[]}, ()=>{})
-    // pushToStorageAndSend('RxV0faquwLI', 'testtt')
-    i = document.createElement('input')
-    i.id = 'test1'
-    i2 = document.createElement('input')
-    i2.id = 'test2'
-    // i3 = document.createElement('input')
-    // i3.id = 'test3'
-    document.querySelector("#search-form").appendChild(i)
-    document.querySelector("#search-form").appendChild(i2)
-    // document.querySelector("#search-form").appendChild(i3)
-    b = document.createElement('s')
-    b.id = 'Finish'
-    b.innerText = 'Finish'
-    document.querySelector("#search-form").appendChild(b)
-    document.querySelector("#Finish").addEventListener("click", t);
-    document.querySelector("#Finish").style.background = '#ea9999'
-    document.querySelector("#Finish").style.textDecoration = "none"
-
-    w = document.createElement('s')
-    w.id = 'NTFinish'
-    w.innerText = 'NTFinish'
-    document.querySelector("#search-form").appendChild(w)
-    document.querySelector("#NTFinish").addEventListener("click", x)
-    document.querySelector("#NTFinish").style.background = '#708fff'
-    document.querySelector("#NTFinish").style.textDecoration = "none"
-
-    }
-}
-
-// if(!myInterval)
-//     myInterval = setInterval(startInterval, period);
 function startInterval(){
     // test()
     try {
@@ -71,9 +27,7 @@ function startInterval(){
     } catch (e) {}
 
     if (isdisplay && redLine.getAttribute("aria-valuenow") != null) { //等於null表示還沒跑過
-        // console.log("看的到3")
     } else {
-        // if(url != 'https://www.youtube.com/' ){
         if(url.indexOf('https://www.youtube.com/watch?v=') == '0'){
             countPauseCount()
             mainStart()
@@ -166,8 +120,8 @@ function pushToStorageAndSend(email, videoInfo, from){
         listenTime: videoInfo['listenTime']
     }
     storage.sync.get(['continuous_videoInfo', 'continuous_videoType'], (data) => {
-        continuous_videoInfo = data['continuous_videoInfo']
-        continuous_videoType = data['continuous_videoType']
+        continuous_videoInfo = data['continuous_videoInfo']||[]
+        continuous_videoType = data['continuous_videoType']||[]
         lastVideoInfo = continuous_videoInfo[continuous_videoInfo.length - 1]
         if( !Boolean(lastVideoInfo) || lastVideoInfo['videoID'] != videoInfo['videoID'] || isFinish){
             if(isFinish){ 

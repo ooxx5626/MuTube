@@ -55,6 +55,7 @@ function sendDate2() {
         if (typeof chrome.app.isInstalled !== undefined) {
             // console.log("not finish ")
             body["listenTime"] = listenTime2 - pauseTime2
+            body['listenTiming'] = initTime2
             console.log(body)
             pushToStorageAndSend(body['email'],body, TAG2)
             chrome.runtime.sendMessage({
