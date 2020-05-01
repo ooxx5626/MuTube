@@ -1,7 +1,7 @@
 {
-  "name": "Musicfy",
-  "version": "3.1",
-  "description": "Mulink Dataset!",
+  "name": "MuTube",
+  "version": "3.2",
+  "description": "MuTube Dataset!",
   "permissions": ["https://www.youtube.com/*", "declarativeContent", "storage", "identity","identity.email"],
   "options_page": "options.html",
   "background": {

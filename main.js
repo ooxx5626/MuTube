@@ -3,6 +3,7 @@ var storage = chrome.storage
 var initTime = (new Date).getTime();
 var isSend = 0, error = false, debug = true
 var sendMode = 0
+var sendTiming = initTime
 // 0 : can repeat and 1 min
 // 1 : half duration
 // 2 : debug 5s
@@ -22,6 +23,7 @@ function resetDataMain(){
     // console.log("resetDataMain")
     preurl = url
     initTime = (new Date).getTime()
+    sendTiming = initTime
     isSend = 0
     pauseCount = 0
     documentTitle = document.title
@@ -46,10 +48,11 @@ function saveDataMain() {
 function sendDateMain() {
     if(sendJudge()) {
         body['likeStatus'] = like_status();
-        body['listenTiming'] = initTime
+        body['listenTiming'] = sendTiming // init is initTime
         console.log(body)
         if (typeof chrome.app.isInstalled !== undefined) {
             isSend += 1
+            sendTiming = (new Date).getTime();
             pushToStorageAndSend(body['email'], body, TAG1)
             chrome.runtime.sendMessage({
                     type: "addYTListenHistory",
@@ -97,7 +100,7 @@ function sendJudge(){
     }
     if(sendMode == 0){// can repeat and 1 min
         re = listenTime - duration*isSend - pauseTime >= 60
-
+        re = re && (new Date).getTime() - sendTiming >= 60
     }else if(sendMode == 1){// half
         re = listenTime*2 >= duration && !isSend
 
