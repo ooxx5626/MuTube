@@ -7,12 +7,10 @@
       height: auto;
       background-color: black;
     }
-
-    #context {
-      /* background-size: contain; */
+    #right{
       width: 400px;
-      /* margin: 4px; */
     }
+ 
     .outer {
       position: relative;    /* ★ */
       height: auto;
@@ -42,32 +40,99 @@
       /* margin: 1px; */
       display: inline-block;
     }
+    .btn-box {
+      display:inline-block;
+      width: 40px;
+      height: 20px;
+      border-radius:100px;
+      background-color: #ccc;
+    }
+    .btn-box .btn {
+      display:inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius:50%;
+      background-color: #aaa;
+    }
   </style>
+  <script type="text/javascript" src="./qrcode.js"></script>
+  <style type="text/css"> /*  checkbox */
+    .switch-slide-label {
+        display: block;
+        width: 34px;
+        height: 18px;
+        background: #ccc;
+        border-radius: 30px;
+        cursor: pointer;
+        position: relative;
+        -webkit-transition: 0.3s ease;
+        transition: 0.3s ease;
+    }
+    
+    .switch-slide-label:after {
+        content: '';
+        display: block;
+        width: 16px;
+        height: 16px;
+        border-radius: 100%;
+        background: #fff;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-transition:0.3s ease;
+        transition:0.3s ease;
+    }
+    
+    .switch-slide input:checked+label {
+        background: #34bf49;
+        transition: 0.3s ease;
+    }
+    .switch-slide input:checked+label:after {
+        left: 17px;
+    }
+
+</style>
 </head>
 
-<body>
-  <!-- <button id="changeColor"></button> -->
-
-  <div id="context">
-    <div class="outer">
-      <div id="info">
-        <span style="display:block">Your mail :</span>
-        <span id="email" class='value'></span>
-        <span style="display:block">videoID :</span>
-        <span id="videoID" class='value'></span>
-        <span style="display:block">videoTitle :</span>
-        <span id="videoTitle" class='value'></span>
-        <span style="display:block">version :</span>
-        <span id="test" class='value'></span>
+<body style='margin-bottom : 10px'>
+  <div id="right">
+    <div style="display:inline;">
+      <div class="radio-beauty-container" style=" margin:5px;">
+        <label class="switch-slide">
+            <input type="checkbox" id="menu-right" hidden>
+            <label for="menu-right" class="switch-slide-label"></label>
+        </label>
       </div>
     </div>
-      <div id="img">
-        <img style="width: 200px;">
+    <div  id="qrcodebox" style="display: none;margin:3px auto;color: bisque;text-align:center;padding: 5px;">
+      <div id=""  >QR-code for MuBox </div>
+      <div id="qrcode" style="margin: 0px 60px;background: white;padding: 5px;"> </div>
+    </div>
+    <div id="context"> 
+      <div class="outer">
+        <div id="info">
+          <span style="display:block">Your mail :</span>
+          <span id="email" class='value'></span>
+          <span style="display:block">videoID :</span>
+          <span id="videoID" class='value'></span>
+          <span style="display:block">videoTitle :</span>
+          <span id="videoTitle" class='value'></span>
+          <span style="display:block">version :</span>
+          <span id="test" class='value'></span>
+        </div>
       </div>
+        <div id="img">
+          <img style="width: 200px;">
+        </div>
+    </div>
   </div>
   <div id="error" style="display: none;width: 100px;">
     <span style="font-size: 1.2em;">Please login your google account in Chrome.</span>
   </div>
+  
   <script src="popup.js"></script>
 </body>
 

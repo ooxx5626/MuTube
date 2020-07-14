@@ -1,6 +1,6 @@
 {
   "name": "MuTube",
-  "version": "3.2",
+  "version": "3.34",
   "description": "MuTube Dataset!",
   "permissions": ["https://www.youtube.com/*", "declarativeContent", "storage", "identity","identity.email"],
   "options_page": "options.html",

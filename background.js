@@ -12,10 +12,11 @@ const endpoint = "https://www.googleapis.com/youtube/v3/videos";
 // * What data will you be accessing?         [ Public data              ]
 
 // const key = "AIzaSyCaHWZYPuLv4cD6k-TQjg4Jx_1GQnG1wFw"; 
+
 const key = "AIzaSyBpjlYzWiO339NWgZ71dGFv_pPMHMmvPSc";
 
 
-chrome.identity.getProfileUserInfo(function (userinfo) {
+chrome.identity.getProfileUserInfo(function (userinfo) {//取得chrome的登入帳號
   console.log("userinfo", userinfo);
   let email = userinfo.email;
   chrome.storage.sync.set({
@@ -26,11 +27,6 @@ chrome.identity.getProfileUserInfo(function (userinfo) {
 });
 
 chrome.runtime.onInstalled.addListener(function () {
-  // chrome.storage.sync.set({
-  //   color: '#3aa757'
-  // }, function () {
-  //   console.log('The color is green.');
-  // });
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
     chrome.declarativeContent.onPageChanged.addRules([{
       conditions: [new chrome.declarativeContent.PageStateMatcher({
@@ -54,16 +50,15 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
         msg: msg
       }))
   }
-  if (request.type == "tags") {
-    fetchCheckVideoInfo(body)
+  if (request.type == "tags") { //這邊會先確認Server是否有這個tag才會向YouTube data api要tag
+    fetchCheckVideoInfo(body) // Server check
       .then(r => r == 'false' ?
         fetchTags(body.videoID)
         .then(t => {
-          // sendResponse({tags: JSON.stringify(t)})
           body.tags = t
           delete body.UUID
           delete body.email
-          fetchaddVideoInfo(body)
+          fetchaddVideoInfo(body) // 執行YouTube data api
             .then(t => sendResponse({
               tags: JSON.stringify(t)
             }))
@@ -87,11 +82,11 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
     }))
   }
 
-  if (request.type == "aboutComment") {
-    checkVideoComment(body)
+  if (request.type == "aboutComment") { //這邊會先確認Server是否有這個tag才會向YouTube data api要tag
+    checkVideoComment(body) // Server check
     .then(msg => {
       if(msg == 'false'){
-        fetchComment(body.videoID)
+        fetchComment(body.videoID) // 執行YouTube data api
         .then(t =>{
           data = {
             "videoID":body.videoID,
@@ -226,7 +221,6 @@ const fetchTags = videoID => {
   return fetch(url)
     .then(r => r.json())
     .then(r => (r.items[0] && r.items[0].snippet.tags) || []);
-
 };
 
 const fetchComment = videoID => {

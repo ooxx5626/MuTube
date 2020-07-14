@@ -7,10 +7,10 @@ var body = {}
 var TAG2 = "notFinishVideo"
 var videoID = ''
 function NFstart() {
-    if (url2 != preurl2 && preurl2 != null && isSaved) {
+    if (url2 != preurl2 && preurl2 != null && isSaved) {//播放頁面改了並且資料有被儲存
         sendDate2()
     } else { // 一樣
-        if(!isSaved  && url.indexOf('https://www.youtube.com/watch?v=') == '0'){
+        if(!isSaved  && (url.indexOf('https://www.youtube.com/watch?v=') == '0' || url.indexOf('https://www.youtube.com/') == '0')){ //如果資料還沒被儲存並且在播放頁
             resetDataNF()
             saveData2()
             initTime2 = (new Date).getTime()
@@ -34,7 +34,7 @@ function saveData2() {
                 console.log("error : " + data["error"])
             }
         }
-})
+    })
 }
 function resetDataNF(){
     // console.log("resetDataNF")
@@ -53,7 +53,6 @@ function sendDate2() {
     }
     if (re) {
         if (typeof chrome.app.isInstalled !== undefined) {
-            // console.log("not finish ")
             body["listenTime"] = listenTime2 - pauseTime2
             body['listenTiming'] = initTime2
             console.log(body)
@@ -71,9 +70,3 @@ function sendDate2() {
     isSaved = false
     preurl2 = url2
 }
-
-// window.onfocus = function() {
-//     if(!myInterval2)
-//         myInterval2 = setInterval(start2, period2);
-//     this.console.log("not "+like_status())
-// }

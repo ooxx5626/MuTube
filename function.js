@@ -1,4 +1,7 @@
+/*
+這個js是最先執行並啟動notFinishVideo和main的，其中還包含多個not 和main都有使用到的function
 
+*/
 // var mainInterval = null
 // var NFInterval = null
 var myInterval = null
@@ -9,17 +12,17 @@ var pauseCount = 0, pauseCount2 = 0
 var storage = chrome.storage
 var s = false
 
-focusCheck = setInterval(function() { 
-    if(document.hasFocus()){
+focusCheck = setInterval(function() { // 程式運作最先跑的地方
+    if(document.hasFocus()){// 處理開新分頁並且在背景時YouTube不會自動運行的問題
         if(!myInterval)
-            myInterval = setInterval(startInterval, period);
+            myInterval = setInterval(startInterval, period); 
         clearInterval(focusCheck)
     }
 },1000);
 
-function startInterval(){
+function startInterval(){//主程式運作
     // test()
-    try {
+    try {//處理網址以及讀取條 
         url = window.location.toString()
         url2 = window.location.toString()
         var redLine = document.querySelector("body > ytd-app > yt-page-navigation-progress")
@@ -28,15 +31,15 @@ function startInterval(){
 
     if (isdisplay && redLine.getAttribute("aria-valuenow") != null) { //等於null表示還沒跑過
     } else {
-        if(url.indexOf('https://www.youtube.com/watch?v=') == '0'){
-            countPauseCount()
-            mainStart()
+        if(url.indexOf('https://www.youtube.com/watch?v=') == '0'){ //如果在播放頁面的話就執行listenHistory的運作 
+            countPauseCount()//計算暫停(沒播放)次數
+            mainStart()//開始跑listenHistory
         }
-        NFstart()
+        NFstart()//開始跑NotFinishHistory
     }
 }
 
-function countPauseCount(){
+function countPauseCount(){//計算暫停(沒播放)次數
     l = document.querySelector("#movie_player").classList
     if(!l.contains("playing-mode")){
         pauseCount += 1
@@ -91,7 +94,8 @@ function saveData(data, f){
         }
 }
 
-function like_status(){
+
+function like_status(){ // likie: 1, dislike: -1 None: 0
     var c = document.querySelector("#menu-container").querySelectorAll("ytd-toggle-button-renderer")
     var like = c[0].classList.contains("style-default-active")
     var dislike = c[1].classList.contains("style-default-active")
@@ -105,7 +109,7 @@ function like_status(){
     return re
 }
 
-function pushToStorageAndSend(email, videoInfo, from){
+function pushToStorageAndSend(email, videoInfo, from){//將資料傳到Background.js丟到外界
     isFinish = from == 'main'?true:false
     var fake = false
     if(!isFinish){

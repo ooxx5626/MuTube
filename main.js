@@ -1,25 +1,29 @@
+/*
+這個js是用來執行ListenHistory的運作的
+
+*/
 
 var storage = chrome.storage
 var initTime = (new Date).getTime();
-var isSend = 0, error = false, debug = true
+var isSend = 0, error = false, debug = true, repeat = false;
 var sendMode = 0
-var sendTiming = initTime
 // 0 : can repeat and 1 min
 // 1 : half duration
 // 2 : debug 5s
+var sendTiming = initTime
 var body = {}
 var TAG1 = "main"
 var videoID = '', documentTitle = ''
 var myInterval = null
 function mainStart() {
-    if (url != preurl && url.indexOf('https://www.youtube.com/watch?v=') == '0') {
+    if (url != preurl && url.indexOf('https://www.youtube.com/watch?v=') == '0') { 
         resetDataMain()
         saveDataMain()
     } else if (!error){
         sendDateMain()
     }
 }
-function resetDataMain(){
+function resetDataMain(){//清除上一筆video的data
     // console.log("resetDataMain")
     preurl = url
     initTime = (new Date).getTime()
@@ -28,7 +32,7 @@ function resetDataMain(){
     pauseCount = 0
     documentTitle = document.title
 }
-function saveDataMain() {
+function saveDataMain() {//紀錄這筆video的data
     storage.sync.get('email', function (data) {
         console.log("work")
         data = saveData(data, TAG1)
@@ -46,11 +50,11 @@ function saveDataMain() {
     })
 }
 function sendDateMain() {
-    if(sendJudge()) {
+    if(sendJudge()) { //判斷是否送出
         body['likeStatus'] = like_status();
         body['listenTiming'] = sendTiming // init is initTime
         console.log(body)
-        if (typeof chrome.app.isInstalled !== undefined) {
+        if (typeof chrome.app.isInstalled !== undefined) {//先確認chrome的套件有無問題
             isSend += 1
             sendTiming = (new Date).getTime();
             pushToStorageAndSend(body['email'], body, TAG1)
@@ -58,30 +62,25 @@ function sendDateMain() {
                     type: "addYTListenHistory",
                     body
                 }, r => r.msg ?
-                console.log("addYTListenHistory : "+r.msg) :
-                console.log("error"));
-                // document.title = 'Add Listen History success'
+                console.log("addYTListenHistory : "+r.msg) : console.log("error"));
                 addMessageShine()
+            
             chrome.runtime.sendMessage({
                     type: "tags",
                     body
                 }, r => r.tags ?
-                console.log("tags : "+r.tags) :
-                console.log(r.error));
+                console.log("tags : "+r.tags) : console.log(r.error));
                 
             chrome.runtime.sendMessage({
                 type: "aboutComment",
                 body
             }, r => r.msg ?
-            console.log("aboutComment : "+r.msg) :
-            console.log(r.error));
-
+                console.log("aboutComment : "+r.msg) : console.log(r.error));
+            
         }else{
             console.log("typeof chrome.app.isInstalled === undefined")
         }
-        
     }
-
 }
 function sendJudge(){
     var re
@@ -99,8 +98,13 @@ function sendJudge(){
         // document.querySelector("#upnext").innerText = listenTime + " " + duration +  " "+isSend+" " + pauseTime
     }
     if(sendMode == 0){// can repeat and 1 min
-        re = listenTime - duration*isSend - pauseTime >= 60
-        re = re && (new Date).getTime() - sendTiming >= 60
+        repeatDOM = document.querySelector("body > div.ytp-popup.ytp-contextmenu > div > div > div:nth-child(1)")
+        repeat = repeatDOM? repeatDOM.getAttribute("aria-checked")=="true": false //重複播放有打勾
+        re = listenTime - duration*isSend - pauseTime >= 60 
+        re = re && (new Date).getTime() - sendTiming >= 60 //保險起見上一次送出的時間至少跟這一次要大餘60秒
+        if(isSend>=1){ //如果送出的次數大餘1 就要檢查DOM的重複播放
+            re = repeat && re
+        }
     }else if(sendMode == 1){// half
         re = listenTime*2 >= duration && !isSend
 
@@ -112,9 +116,8 @@ function sendJudge(){
     }
     return re
 }
-function addMessageShine(){
+function addMessageShine(){ 
     var startTime = (new Date).getTime()
-    // console.log("startTime :"+startTime)
     var shine = true
     var addMessageTask = setInterval(()=>{
         if((new Date).getTime() - startTime > 12000){
@@ -123,17 +126,7 @@ function addMessageShine(){
             clearInterval(addMessageTask);
             return;
         }
-        // console.log("documentTitle :"+documentTitle)
-        // console.log("(new Date).getTime() :"+(new Date).getTime())
-        // console.log("shine :"+shine)
-        shine? document.title = 'Add Listen History success':document.title = documentTitle
+        shine? document.title = 'Add Listening record success':document.title = documentTitle
         shine = !shine
     }, 1000);
 }
-// window.onfocus = function() {
-//     // if(!myInterval)
-//     //     myInterval = setInterval(start, period);
-//     storage.sync.get('email', function (data) {
-//     this.console.log("main " + JSON.stringify(saveData()))
-//     })
-// }
