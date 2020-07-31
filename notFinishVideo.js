@@ -5,20 +5,19 @@ var initTime2 = (new Date).getTime();
 var isSaved = false
 var body = {}
 var TAG2 = "notFinishVideo"
-var videoID = ''
 function NFstart() {
     if (url2 != preurl2 && preurl2 != null && isSaved) {//播放頁面改了並且資料有被儲存
-        sendDate2()
+        sendDataNF()
     } else { // 一樣
-        if(!isSaved  && (url.indexOf('https://www.youtube.com/watch?v=') == '0' || url.indexOf('https://www.youtube.com/') == '0')){ //如果資料還沒被儲存並且在播放頁
+        if(!isSaved  && url.indexOf('https://www.youtube.com/watch?v=') == '0' ){ //如果資料還沒被儲存並且在播放頁
             resetDataNF()
-            saveData2()
+            saveDataNF()
             initTime2 = (new Date).getTime()
         }
     }
 }
 
-function saveData2() {
+function saveDataNF() {
     storage.sync.get('email', function (data) {
         // console.log("saveData")
         data = saveData(data, TAG2)
@@ -43,7 +42,7 @@ function resetDataNF(){
     pauseCount2 = 0
 }
 
-function sendDate2() {
+function sendDataNF() {
     var duration2 = +body["duration"].replace('PT','').replace('S','')
     var listenTime2 = ((new Date).getTime()-initTime2)/1000
     var pauseTime2 = pauseCount2 * period/1000
@@ -56,7 +55,7 @@ function sendDate2() {
             body["listenTime"] = listenTime2 - pauseTime2
             body['listenTiming'] = initTime2
             console.log(body)
-            pushToStorageAndSend(body['email'],body, TAG2)
+            // pushToStorageAndSend(body['email'],body, TAG2)
             chrome.runtime.sendMessage({
                     type: "notFinish",
                     body
